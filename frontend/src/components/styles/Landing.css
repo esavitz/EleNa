@@ -8,6 +8,9 @@
 }
 
 .left-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: absolute;
     left: 0;
     top: 50%;
@@ -15,8 +18,19 @@
     transform: translateY(-50%);
     width: 800px;
     /* Adjust the width as needed */
-    height: 800px;
+    height: 100vh;
     /* Adjust the height as needed */
     background-color: #f0f0f0;
     /* Adjust the background color as needed */
+    flex-direction: column;
+    margin-bottom: 20px; /* Add spacing between the boxes */
+}
+
+.title {
+    font-size: 180px;
+    /* Adjust the font size as needed */
+    color: #333;
+    /* Adjust the text color as needed */
+    margin: 0;
+    /* Remove any default margin */
 }
