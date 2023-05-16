@@ -8,5 +8,12 @@ class controller:
         self.model = MapGraph([data["start"], data["end"]])
 
     def get_route(self):
-        route = ox.shortest_path(self.model.get_graph(), self.model.get_locations()[0], self.model.get_locations()[1], weight='length')
-        return route
+        # fig, ax = ox.plot_graph_route(self.model.get_graph(), route, node_size=0)
+        return ox.shortest_path(self.model.get_graph(), self.model.get_start_node(), self.model.get_end_node(), weight='length')
+
+    def get_lat_long_route(self):
+        route = self.get_route()
+        lat_long_route = []
+        for node in route:
+            lat_long_route.append([self.model.get_nodes()[node]['y'], self.model.get_nodes()[node]['x']])
+        return lat_long_route
