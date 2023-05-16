@@ -4,15 +4,35 @@ import './styles/Landing.css';
 
 function Landing() {
   const [route, setRoute] = useState(null); // [route, setRoute]
-  const [startPosition, setStartPosition] = useState("");
-  const [destination, setDestination] = useState("");
-  const [multiplier, setMultiplier] = useState(.5);
-  const [routeType, setRouteType] = useState(true);
+  const [start, setStart] = useState("");
+  const [end, setEnd] = useState("");
+  const [percentage, setPercentage] = useState(.5);
+  const [max, setMax] = useState(true);
 
   const getRoute = async () => {
     const res = await axios.get('http://localhost:5000/get_route');
     setRoute(res.data);
     console.log(res);
+  };
+
+  const handleStart = (event) => {
+    setStart(event.target.value);
+    console.log(start)
+  };
+
+  const handleEnd = (event) => {
+    setEnd(event.target.value);
+    console.log(end)
+  };
+
+  const handlePercentage = (event) => {
+    setPercentage(event.target.value);
+    console.log(percentage)
+  };
+
+  const handleMax = () => {
+    setMax(!max);
+    console.log(max)
   };
 
   return (
@@ -23,7 +43,29 @@ function Landing() {
         <p>{route}</p>
       </div>
       <div className='left-box'>
-        
+        <h1 className='title'>EleNa</h1>
+        <h1>Start Location</h1>
+        <form>
+          <input type="text" id="start" start="start" placeholder="Enter your start location" value={start} onChange={handleStart} required></input>
+        </form>
+        <h1>End Location</h1>
+        <form>
+          <input type="text" id="end" start="end" placeholder="Enter your end location" value={end} onChange={handleEnd} required></input>
+        </form>
+        <div>
+          <p>Selected Percentage: {percentage}%</p>
+          <input
+            type="range"
+            min="100"
+            max="200"
+            value={percentage}
+            onChange={handlePercentage}
+          />
+        </div>
+        <div>
+          <button onClick={handleMax}>{max ? 'MIN' : 'MAX'}</button>
+          <p>Toggle state: {max ? 'MIN' : 'MAX'}</p>
+        </div>
       </div>
     </div>
   );
