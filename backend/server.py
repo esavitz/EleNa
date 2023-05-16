@@ -1,13 +1,27 @@
-from flask import Flask
+from flask import Flask, request, make_response
 from flask_cors import CORS
+from controller import controller
 
 app = Flask(__name__) # create a Flask app
 CORS(app)
 
+# {
+#     "start": string,
+#     "end": string,
+#     "percentage": number,
+#     "max": boolean
+# }
+
 
 @app.route('/get_route')
 def get_route():
-    return 'Hello, World!'
+    data = request.get_json()
+    print(data)
+    try:
+        controller_obj = controller(data)
+        return make_response(controller_obj.get_route(), 200)
+    except Exception as e:
+        return make_response(str(e), 500)
 
 
 if __name__ == '__main__': 
