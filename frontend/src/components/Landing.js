@@ -6,7 +6,7 @@ function Landing() {
   const [route, setRoute] = useState(null); // [route, setRoute]
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
-  const [percentage, setPercentage] = useState(.5);
+  const [percentage, setPercentage] = useState(1);
   const [max, setMax] = useState(true);
 
   const getRoute = async () => {
@@ -53,11 +53,12 @@ function Landing() {
           <input type="text" id="end" start="end" placeholder="Enter your end location" value={end} onChange={handleEnd} required></input>
         </form>
         <div>
-          <p>Selected Percentage: {percentage}%</p>
+          <p>Selected Percentage: {percentage * 100}%</p>
           <input
             type="range"
-            min="100"
-            max="200"
+            step={.01}
+            min="1"
+            max="2"
             value={percentage}
             onChange={handlePercentage}
           />
