@@ -12,6 +12,8 @@ class MapGraph:
         Attributes:
             locations (list): Names of the start and end locations.
             graph (networkx.Graph): Networkx graph representing the street network.
+            start_geo (tuple): Tuple of the start location's latitude and longitude.
+            end_geo (tuple): Tuple of the end location's latitude and longitude.
             nodes (list): List of nodes in the graph.
             edges (list): List of edges in the graph.
             shortest_path (list): List of nodes in the shortest path.
@@ -22,7 +24,9 @@ class MapGraph:
             result_path_elevation (float): Elevation gain of the result path in meters.
         """
         self.locations = locations
-        self.graph = ox.graph_from_place(locations, network_type='all')
+        self.graph = ox.graph_from_place(locations, network_type='all', buffer_dist=2000)
+        self.start_geo = ox.geocode(locations[0])
+        self.end_geo = ox.geocode(locations[1])
         self.nodes = self.graph.nodes()
         self.edges = self.graph.edges()
         self.shortest_path = None
@@ -31,6 +35,24 @@ class MapGraph:
         self.result_path = None
         self.result_path_length = None
         self.result_path_elevation = None
+
+    def get_start_node(self):
+        """
+        Get the start node.
+
+        Returns:
+            int: Start node ID.
+        """
+        return ox.distance.nearest_nodes(self.graph, self.start_geo[1], self.start_geo[0])
+
+    def get_end_node(self):
+        """
+        Get the end node.
+
+        Returns:
+            int: End node ID.
+        """
+        return ox.distance.nearest_nodes(self.graph, self.end_geo[1], self.end_geo[0])
 
     def get_locations(self):
         """
