@@ -1,0 +1,6 @@
+.map-box {
+    /* map on right 70% of screen */
+    width: 65vw;
+    margin-left: 35%;
+    height: 100vh;
+  }
