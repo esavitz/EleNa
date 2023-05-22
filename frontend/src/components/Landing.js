@@ -18,16 +18,31 @@ function Landing() {
   //   if(route) {
   //     console.log(route);
 
-  const getRoute = async () => {
-    const res = await axios.post('http://localhost:5000/get_route',{
+  const requestData = {
       "start": start,
       "end": end,
       "percentage": percentage,
       "max": max
-    });
+  };
+    
+
+  const config = {
+  headers: {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS',  
+    },
+  };
+
+  const getRoute = async () => {
+  try {
+    const res = await axios.post('http://127.0.0.1:5000/get_route', requestData, config);
     setRoute(res.data);
     console.log(res);
-  };
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+
 
   const handleStart = (event) => {
     setStart(event.target.value);
