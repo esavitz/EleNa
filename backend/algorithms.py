@@ -6,6 +6,15 @@ import json
 import math
 
 def find_all_paths(graph, start, end):
+    """
+        Get the list of all simple paths from the start node to the end node of the graph.
+        Args:
+            graph (networkX Multigraph): A networkX Multigraph
+            start (int): Starting node ID in the graph
+            end (int): Ending node ID in the graph
+        Returns:
+            list: List of all simple paths from the start node to the end node.
+    """
     paths = []
     visited = set()
 
@@ -23,6 +32,17 @@ def find_all_paths(graph, start, end):
     return paths
 
 def dijkstra_max_weight(graph, start, end, max_length):
+    """
+        Get the list of nodes in the elevation gain maximizing path using a modified Dijkstra's algorithm.
+        The method limits the length of the path to max_length.
+        Args:
+            graph (networkX Multigraph): A networkX Multigraph
+            start (int): Starting node ID in the graph
+            end (int): Ending node ID in the graph
+            max_length (float): Max length of the gain maximizing path. 
+        Returns:
+            list: List of nodes in the elevation gain maximizing path.
+    """
     distances = {node: -math.inf for node in graph}
     predecessors = {node: None for node in graph}
     visited = set()

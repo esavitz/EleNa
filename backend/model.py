@@ -265,6 +265,12 @@ class MapGraph:
 
 
     def min_elevation_path(self):
+        """
+        Get the list of nodes in the elevation gain minimizing path.
+
+        Returns:
+            list: List of nodes in theelevation gain minimizing path.
+        """
         
         for u, v, key in self.graph.edges(keys=True):
             edge = []
@@ -272,15 +278,21 @@ class MapGraph:
             edge.append(v)
             self.graph[u][v][key]['gain'] = self.get_elevation_gain(edge)
 
-        path = ox.shortest_path(self.get_graph(), self.get_start_node(), self.get_end_node(), weight='gain')
-        path_length = int(sum(ox.utils_graph.get_route_edge_attributes(self.get_graph(), path, "length")))
-        path_elevation = self.get_elevation_gain(path)
+        self.result_path = ox.shortest_path(self.get_graph(), self.get_start_node(), self.get_end_node(), weight='gain')
+        self.result_path_length = int(sum(ox.utils_graph.get_route_edge_attributes(self.get_graph(), self.result_path, "length")))
+        self.result_path_elevation = self.get_elevation_gain(self.result_path)
         
-        print(f"min gain path length: {path_length}")
-        print(f"min gain elevation gain: {path_elevation}")
-        return path
+        print(f"min gain path length: {self.result_path_length}")
+        print(f"min gain elevation gain: {self.result_path_elevation}")
+        return self.result_path_elevation
     
-    def max_elevation_path2(self, max_length_mult=2.0):
+    def max_elevation_path_bruteforce(self, max_length_mult=2.0):
+        """
+        Get the list of nodes in the elevation gain maximizing path using a bruteforce solution.
+
+        Returns:
+            list: List of nodes in the elevation gain maximizing path.
+        """
 
         for u, v, key in self.graph.edges(keys=True):
             edge = []
@@ -291,7 +303,7 @@ class MapGraph:
         paths = find_all_paths(self.graph, self.get_start_node(), self.get_end_node())
 
         path_el = {}
-        #ele_gain = {}
+   
         for path in paths:
             path_el[path] = self.get_elevation_gain(path)
 
@@ -302,10 +314,20 @@ class MapGraph:
             if path_length <= max_length_mult*self.shortest_path_length:
                 print(f"max gain path length: {path_length}")
                 print(f"max elevation path gain: {sorted_path_el[key]}")
-                return key 
+                self.result_path = key
+                self.result_path_length = path_length
+                self.result_path_elevation = sorted_path_el[key]
+                return self.result_path 
         return None
     
     def max_elevation_path(self, max_length_mult=2.0):
+        """
+        Get the list of nodes in the elevation gain maximizing path using a modified Dijkstra's algorithm.
+        If no maximizing path is found, the method returns the shortest path.
+
+        Returns:
+            list: List of nodes in the elevation gain maximizing path.
+        """
 
         for u, v, key in self.graph.edges(keys=True):
             edge = []
@@ -314,14 +336,16 @@ class MapGraph:
             self.graph[u][v][key]['gain'] = self.get_elevation_gain(edge)
 
         max_length = self.shortest_path_length*max_length_mult
-        path = dijkstra_max_weight(self.graph, self.get_start_node(), self.get_end_node(), max_length)
-        path_length = int(sum(ox.utils_graph.get_route_edge_attributes(self.get_graph(), path, "length")))
-        path_elevation = self.get_elevation_gain(path)
+        self.result_path = dijkstra_max_weight(self.graph, self.get_start_node(), self.get_end_node(), max_length)
+        if self.result_path == None:
+            self.result_path = self.shortest_path
+        self.result_path_length = int(sum(ox.utils_graph.get_route_edge_attributes(self.get_graph(), self.result_path, "length")))
+        self.result_path_elevation = self.get_elevation_gain(self.result_path)
         
-        print(f"max gain path length: {path_length}")
-        print(f"max gain elevation gain: {path_elevation}")
+        print(f"max gain path length: {self.result_path_length}")
+        print(f"max gain elevation gain: {self.result_path_elevation}")
 
-        return path
+        return self.result_path
 
 
 
