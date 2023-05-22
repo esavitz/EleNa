@@ -19,7 +19,8 @@ def get_route():
     print(data)
     try:
         controller_obj = controller(data)
-        return make_response(controller_obj.get_lat_long_route(), 200)
+        model = controller_obj.get_model()
+        return make_response({'route': controller_obj.get_lat_long_route(), 'gain': model.get_result_path_elevation(), 'len': model.get_result_path_length()}, 200)
     except Exception as e:
         return make_response(str(e), 500)
 

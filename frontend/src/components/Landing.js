@@ -15,6 +15,8 @@ function Landing() {
   const [max, setMax] = useState(true);
   const [loading, setLoading] = useState(false);
   const [request, setRequest] = useState(null);
+  const [len, setLen] = useState(null);
+  const [gain, setGain] = useState(null);
 
   // Function to make API request and retrieve route
   const getRoute = async () => {
@@ -39,7 +41,9 @@ function Landing() {
         },
         { cancelToken: source.token }
       );
-      setRoute(res.data);
+      setRoute(res.data["route"]);
+      setLen(res.data["len"]);
+      setGain(res.data["gain"]);
       setLoading(false);
       console.log(res);
     } catch (error) {
@@ -126,8 +130,8 @@ function Landing() {
           />
         
         
-        <button onClick={handleMax}>{max ? 'MIN' : 'MAX'}</button>
-        <p>Toggle state: {max ? 'MIN' : 'MAX'}</p>
+        <button onClick={handleMax}>{max ? 'MAX' : 'MIN'}</button>
+        <p>Toggle state: {max ? 'MAX' : 'MIN'}</p>
         
         <button onClick={getRoute}>Submit</button>
         {loading && (
@@ -135,6 +139,12 @@ function Landing() {
             Loading...
             <ClipLoader type='TailSpin' color='#00BFFF' height={70} width={70} />
             <button onClick={handleCancel}>Cancel</button>
+          </div>
+        )}
+        {route && (
+          <div className='route-info'>
+            <p>Route Length: {len} meters</p>
+            <p>Elevation Gain: { Math.floor(gain)} meters</p>
           </div>
         )}
       </div>

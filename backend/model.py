@@ -284,7 +284,7 @@ class MapGraph:
         
         print(f"min gain path length: {self.result_path_length}")
         print(f"min gain elevation gain: {self.result_path_elevation}")
-        return self.result_path_elevation
+        return self.result_path
     
     def max_elevation_path_bruteforce(self, max_length_mult=2.0):
         """

@@ -22,3 +22,6 @@ class controller:
         for node in route:
             lat_long_route.append([self.model.get_nodes()[node]['y'], self.model.get_nodes()[node]['x']])
         return lat_long_route
+
+    def get_model(self):
+        return self.model
