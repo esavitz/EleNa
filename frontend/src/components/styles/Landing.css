@@ -43,6 +43,14 @@
     display: flex;
 }
 
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    font-size: 18px;
+  }
+
 input[type="text"] {
     width: 100%; /* Set the width to 100% of the parent container */
     padding: 10px; /* Add padding */

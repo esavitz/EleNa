@@ -1,4 +1,5 @@
-Using flask so make sure it is insalled before running the server
+Install dependencies via pip:
 ```
-pip install flask
+pip install -r requirements.txt
 ```
+To run the tests use the the ```pytest``` command
