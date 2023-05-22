@@ -57,11 +57,11 @@ function Landing() {
         <h1 className='title'>EleNa</h1>
         <h1>Start Location</h1>
         <form>
-          <input type="text" id="start" start="start" placeholder="e.g. 650 N Pleasant St, Amherst, MA 01003" value={start} onChange={handleStart} required></input>
+          <input type="text" id="start" start="start" placeholder="e.g. Amherst, MA" value={start} onChange={handleStart} required></input>
         </form>
         <h1>End Location</h1>
         <form>
-          <input type="text" id="end" start="end" placeholder="e.g. 650 N Pleasant St, Amherst, MA 01003" value={end} onChange={handleEnd} required></input>
+          <input type="text" id="end" start="end" placeholder="e.g. Amherst, MA" value={end} onChange={handleEnd} required></input>
         </form>
         <div>
           <p>Selected Percentage: {percentage * 100}%</p>
