@@ -1,5 +1,9 @@
 import osmnx as ox
 import networkx as nx
+import pandas as pd
+import json
+from pandas import json_normalize
+import requests as req
 
 class MapGraph:
     def __init__(self, locations):
@@ -24,7 +28,14 @@ class MapGraph:
             result_path_elevation (float): Elevation gain of the result path in meters.
         """
         self.locations = locations
+
+        # Create the graph from locations
         self.graph = ox.graph_from_place(locations, network_type='all', buffer_dist=2000)
+
+        # Add elevation to the graph
+        self.graph = ox.elevation.add_node_elevations_google(self.graph, api_key='AIzaSyA8gjr4DmvMClK0_k4J1wl_PNd3ljYoj2k')
+        self.graph = ox.elevation.add_edge_grades(self.graph)
+
         self.start_geo = ox.geocode(locations[0])
         self.end_geo = ox.geocode(locations[1])
         self.nodes = self.graph.nodes()
@@ -106,6 +117,16 @@ class MapGraph:
         Returns:
             list: List of nodes in the shortest path.
         """
+        self.shortest_path = ox.shortest_path(self.get_graph(), self.get_start_node(), self.get_end_node(), weight='length')
+
+        self.shortest_path_length = int(sum(ox.utils_graph.get_route_edge_attributes(self.get_graph(), self.shortest_path, "length")))
+
+        self.shortest_path_elevation = self.get_elevation_gain(self.shortest_path)
+
+        #self.shortest_path_elevation = sum(ox.utils_graph.get_route_edge_attributes(self.get_graph(), self.shortest_path, "grade_abs"))
+        
+        print(f"shortest path length: {self.shortest_path_length}")
+        print(f"elevation gain: {self.shortest_path_elevation}")
         return self.shortest_path
 
     def set_shortest_path(self, shortest_path):
@@ -207,5 +228,25 @@ class MapGraph:
         """
         self.result_path_elevation = result_path_elevation
 
+    def get_elevation_gain(self, path):
+        """
+        Returns the elevation gain of a path in meters.
+
+        Args:
+            path (float): Path consisting of a list of nodes
+        """
+        if len(path) == 0 or path == None:
+            return None
+        gain = 0
+        for i in range(len(path)-1):
+            diff = self.graph.nodes[path[i+1]]['elevation'] - self.graph.nodes[path[i]]['elevation']
+            if diff > 0:
+                gain += diff
+        return gain
+
+
+
         
+
+
 
