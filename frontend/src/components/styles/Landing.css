@@ -42,3 +42,11 @@
 .landing-container{
     display: flex;
 }
+
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+    font-size: 18px;
+  }
