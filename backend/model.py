@@ -4,6 +4,7 @@ import pandas as pd
 import json
 from pandas import json_normalize
 import requests as req
+from algorithms import find_all_paths, dijkstra_max_weight
 
 class MapGraph:
     def __init__(self, locations):
@@ -35,6 +36,9 @@ class MapGraph:
         # Add elevation to the graph
         self.graph = ox.elevation.add_node_elevations_google(self.graph, api_key='AIzaSyA8gjr4DmvMClK0_k4J1wl_PNd3ljYoj2k')
         self.graph = ox.elevation.add_edge_grades(self.graph)
+
+        edge_attributes = ox.graph_to_gdfs(self.graph, nodes=False).columns
+        #print(edge_attributes)
 
         self.start_geo = ox.geocode(locations[0])
         self.end_geo = ox.geocode(locations[1])
@@ -121,9 +125,8 @@ class MapGraph:
 
         self.shortest_path_length = int(sum(ox.utils_graph.get_route_edge_attributes(self.get_graph(), self.shortest_path, "length")))
 
+        #print("shortest path: ", self.shortest_path)
         self.shortest_path_elevation = self.get_elevation_gain(self.shortest_path)
-
-        #self.shortest_path_elevation = sum(ox.utils_graph.get_route_edge_attributes(self.get_graph(), self.shortest_path, "grade_abs"))
         
         print(f"shortest path length: {self.shortest_path_length}")
         print(f"elevation gain: {self.shortest_path_elevation}")
@@ -243,10 +246,84 @@ class MapGraph:
             if diff > 0:
                 gain += diff
         return gain
+    
+    def get_elevation_loss(self, path):
+        """
+        Returns the elevation gain of a path in meters.
+
+        Args:
+            path (float): Path consisting of a list of nodes
+        """
+        if len(path) == 0 or path == None:
+            return None
+        loss = 0
+        for i in range(len(path)-1):
+            diff = self.graph.nodes[path[i+1]]['elevation'] - self.graph.nodes[path[i]]['elevation']
+            if diff < 0:
+                loss += abs(diff)
+        return loss
 
 
-
+    def min_elevation_path(self):
         
+        for u, v, key in self.graph.edges(keys=True):
+            edge = []
+            edge.append(u)
+            edge.append(v)
+            self.graph[u][v][key]['gain'] = self.get_elevation_gain(edge)
+
+        path = ox.shortest_path(self.get_graph(), self.get_start_node(), self.get_end_node(), weight='gain')
+        path_length = int(sum(ox.utils_graph.get_route_edge_attributes(self.get_graph(), path, "length")))
+        path_elevation = self.get_elevation_gain(path)
+        
+        print(f"min gain path length: {path_length}")
+        print(f"min gain elevation gain: {path_elevation}")
+        return path
+    
+    def max_elevation_path2(self, max_length_mult=2.0):
+
+        for u, v, key in self.graph.edges(keys=True):
+            edge = []
+            edge.append(u)
+            edge.append(v)
+            self.graph[u][v][key]['gain'] = self.get_elevation_gain(edge)
+
+        paths = find_all_paths(self.graph, self.get_start_node(), self.get_end_node())
+
+        path_el = {}
+        #ele_gain = {}
+        for path in paths:
+            path_el[path] = self.get_elevation_gain(path)
+
+        sorted_path_el = dict(sorted(path_el.items(), reverse=True))
+
+        for key in sorted_path_el.keys():
+            path_length = int(sum(ox.utils_graph.get_route_edge_attributes(self.get_graph(), key, "length")))
+            if path_length <= max_length_mult*self.shortest_path_length:
+                print(f"max gain path length: {path_length}")
+                print(f"max elevation path gain: {sorted_path_el[key]}")
+                return key 
+        return None
+    
+    def max_elevation_path(self, max_length_mult=2.0):
+
+        for u, v, key in self.graph.edges(keys=True):
+            edge = []
+            edge.append(u)
+            edge.append(v)
+            self.graph[u][v][key]['gain'] = self.get_elevation_gain(edge)
+
+        max_length = self.shortest_path_length*max_length_mult
+        path = dijkstra_max_weight(self.graph, self.get_start_node(), self.get_end_node(), max_length)
+        path_length = int(sum(ox.utils_graph.get_route_edge_attributes(self.get_graph(), path, "length")))
+        path_elevation = self.get_elevation_gain(path)
+        
+        print(f"max gain path length: {path_length}")
+        print(f"max gain elevation gain: {path_elevation}")
+
+        return path
+
+
 
 
 
