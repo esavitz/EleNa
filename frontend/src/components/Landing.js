@@ -114,7 +114,7 @@ function Landing() {
             required
           ></input>
         </form>
-        <div>
+        
           <p>Selected Percentage: {percentage * 100}%</p>
           <input
             type='range'
@@ -124,11 +124,11 @@ function Landing() {
             value={percentage}
             onChange={handlePercentage}
           />
-        </div>
-        <div>
-          <button onClick={handleMax}>{max ? 'MIN' : 'MAX'}</button>
-          <p>Toggle state: {max ? 'MIN' : 'MAX'}</p>
-        </div>
+        
+        
+        <button onClick={handleMax}>{max ? 'MIN' : 'MAX'}</button>
+        <p>Toggle state: {max ? 'MIN' : 'MAX'}</p>
+        
         <button onClick={getRoute}>Submit</button>
         {loading && (
           <div className='spinner-container'>

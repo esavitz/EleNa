@@ -50,3 +50,9 @@
     height: 100px;
     font-size: 18px;
   }
+
+input[type="text"] {
+    width: 100%; /* Set the width to 100% of the parent container */
+    padding: 10px; /* Add padding */
+    font-size: 16px; /* Set the font size */
+  }
