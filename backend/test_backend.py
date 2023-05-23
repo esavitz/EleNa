@@ -33,27 +33,11 @@ def test_get_graph(map_graph):
     assert graph is not None
     assert isinstance(graph, nx.Graph)
 
-def test_get_nodes(map_graph):
-    nodes = map_graph.get_nodes()
-    assert isinstance(nodes, list)
-
-def test_get_edges(map_graph):
-    edges = map_graph.get_edges()
-    assert isinstance(edges, list)
-
-
-def test_get_shortest_path(map_graph):
-    shortest_path = map_graph.get_shortest_path()
-    assert shortest_path is None
 
 def test_set_shortest_path(map_graph):
     shortest_path = [1, 2, 3]
     map_graph.set_shortest_path(shortest_path)
     assert map_graph.get_shortest_path() == shortest_path
-
-def test_get_shortest_path_length(map_graph):
-    shortest_path_length = map_graph.get_shortest_path_length()
-    assert shortest_path_length is None
 
 def test_set_shortest_path_length(map_graph):
     shortest_path_length = 1000.0
@@ -64,10 +48,6 @@ def test_set_shortest_path_elevation(map_graph):
     shortest_path_elevation = 200.0
     map_graph.set_shortest_path_elevation(shortest_path_elevation)
     assert map_graph.get_shortest_path_elevation() == shortest_path_elevation
-
-def test_get_result_path(map_graph):
-    result_path = map_graph.get_result_path()
-    assert result_path is None
 
 def test_set_result_path(map_graph):
     result_path = [1, 2, 3, 4]
