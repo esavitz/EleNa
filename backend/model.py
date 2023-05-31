@@ -34,7 +34,7 @@ class MapGraph:
         self.graph = ox.graph_from_place(locations, network_type='all', buffer_dist=2000)
 
         # Add elevation to the graph
-        self.graph = ox.elevation.add_node_elevations_google(self.graph, api_key='AIzaSyA8gjr4DmvMClK0_k4J1wl_PNd3ljYoj2k')
+        self.graph = ox.elevation.add_node_elevations_google(self.graph, api_key='')
         self.graph = ox.elevation.add_edge_grades(self.graph)
 
         edge_attributes = ox.graph_to_gdfs(self.graph, nodes=False).columns
